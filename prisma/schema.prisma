@@ -13,12 +13,46 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
+model Projects {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  title String
 
-  email   String   @unique
+  description String
 
-  name    String?
+  // taskUpdatedAt      Task   @relation("updatedAt")
+}
 
+model Board {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  title String
+
+  tasks Task[]
+}
+
+model Task {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  title String
+
+  description String
+
+  priority Priority
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  Board   Board?  @relation(fields: [boardId], references: [id])
+  boardId String? @db.ObjectId
+}
+
+
+enum Priority {
+  Lowest
+  Low
+  Medium
+  High
+  Highest
 }
